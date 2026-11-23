@@ -46,6 +46,9 @@ interface AnimeDao {
     @Query("SELECT * FROM anime WHERE title LIKE '%' || :text || '%' ORDER BY rank")
     fun searchByTitle(text: String): Flow<List<AnimeEntity>>
 
+    @Query("SELECT * FROM anime WHERE title LIKE '%' || :text || '%' ORDER BY rank")
+    fun search(text: String): Flow<List<AnimeEntity>>
+
     @Query(
         "SELECT anime.* FROM anime " +
         "INNER JOIN anime_genre ON anime.anime_id = anime_genre.anime_id " +
