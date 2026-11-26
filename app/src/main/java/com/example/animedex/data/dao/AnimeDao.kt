@@ -50,6 +50,19 @@ interface AnimeDao {
     fun search(text: String): Flow<List<AnimeEntity>>
 
     @Query(
+        "SELECT * FROM anime " +
+        "WHERE title LIKE '%' || :text || '%' AND score >= :minScore " +
+        "ORDER BY " +
+        "  CASE WHEN :sort = 'SCORE' THEN score END DESC, " +
+        "  CASE WHEN :sort = 'POPULARITY' THEN popularity END ASC, " +
+        "  rank ASC",
+    )
+    fun searchWithFilter(text: String, minScore: Double, sort: String): Flow<List<AnimeEntity>>
+
+    @Query("SELECT * FROM anime WHERE anime_id IN (:ids) ORDER BY rank ASC")
+    fun byIds(ids: Collection<Int>): Flow<List<AnimeEntity>>
+
+    @Query(
         "SELECT anime.* FROM anime " +
         "INNER JOIN anime_genre ON anime.anime_id = anime_genre.anime_id " +
         "INNER JOIN genre ON anime_genre.genre_id = genre.genre_id " +
